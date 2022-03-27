@@ -7,8 +7,13 @@ const findBySerialNumber = async (serialNumber) => {
 
     for (const device of devices) {
         try {
-            if (!opened(device)) {
-                device.open();
+            try {
+                if (!opened(device)) {
+                    device.open();
+                }
+            } catch(e) {
+                // Ignore any errors, device may be a system device or inaccessible
+                continue;
             }
 
             const getStringDescriptor = util.promisify(device.getStringDescriptor).bind(device);
@@ -18,8 +23,6 @@ const findBySerialNumber = async (serialNumber) => {
             if (buffer && buffer.toString() === serialNumber) {
                 return device;
             }
-        } catch(e) {
-            // Ignore any errors, device may be a system device or inaccessible
         } finally {
             try {
                 if (opened(device)) {
@@ -35,7 +38,7 @@ const findBySerialNumber = async (serialNumber) => {
 };
 
 (async () => {
-    const usbDevice = await findBySerialNumber('0161811210204');
+    const usbDevice = await findBySerialNumber('0161811210210');
     console.log(usbDevice);
 })()
 
