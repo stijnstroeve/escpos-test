@@ -1,8 +1,6 @@
 const {getDeviceList} = require('usb')
 const util = require('util');
 
-const id = '0483-5720-0161811210204';
-
 const findBySerialNumber = async (serialNumber) => {
     const devices = getDeviceList();
     const opened = (device) => !!device.interfaces;
